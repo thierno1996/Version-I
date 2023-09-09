@@ -1,0 +1,256 @@
+#:import SQLiteDatabase DataBaseClasses.SQLiteDatabase
+
+<ScreenThree>:
+    text_input_for_product : text_input_for_product
+    text_input_for_buying_price : text_input_for_buying_price
+    text_input_for_selling_price : text_input_for_selling_price
+    text_input_for_quantity : text_input_for_quantity
+    text_input_for_info : text_input_for_info
+
+    MDBoxLayout:
+        id: Screen_three_box_layout
+        orientation : "vertical"
+
+        MDBoxLayout:
+            size_hint_y : None
+            height : "60dp"
+            spacing : "10dp"
+            orientation : "horizontal"
+            NoSpaceTextField:
+                id : text_input_for_product
+                size_hint_y : None
+                height : "15dp"
+                hint_text : "Nom du produit"
+                multiline : False
+                font_size : "25dp"
+                bold : True
+            MDTextField:
+                id : popup_controller_screen3
+                hint_text : "  recherche..."
+                mode: "fill"
+                fill_color: 0, 0, 0, .4
+                size_hint_x : None
+                width : "200dp"
+                on_focus:
+                    root.window.open()
+                on_text:
+                    root.window.content.update_data(self.text)
+                    #root.ids.rv_screen3.update_data(self.text)
+
+
+
+        DigitTextField:
+            id : text_input_for_selling_price
+            size_hint_y : None
+            height : "12dp"
+            hint_text : "Prix de vente"
+            font_size : "20dp"
+            bold : True
+
+        Quantity:
+            id : text_input_for_quantity
+            size_hint_y : None
+            height : "12dp"
+            hint_text : "Quantité"
+            font_size : "20dp"
+            bold : True
+        MDLabel:
+            text : "*Optionnel"
+            size_hint_y : None
+            height : "12dp"
+            halign: "center"
+            color : (0, 0, 1, 1)
+        DigitTextField:
+            id : text_input_for_buying_price
+            size_hint_y : None
+            height : "12dp"
+            hint_text : "Prix d'achat"
+            font_size : "20dp"
+            bold : True
+
+        MDTextField:
+            id : text_input_for_info
+            size_hint_y : None
+            height : "12dp"
+            hint_text : "Info"
+            font_size : "20dp"
+            bold : True
+        BoxLayout:
+            orientation : "vertical"
+            size_hint_y : None
+            height : "50dp"
+            ScrollView:
+                do_scroll_x: True
+                do_scroll_y: True
+                bar_width : "7dp"
+                bar_width_color : (0, 0, 1, 1)
+                BoxLayout:
+                    id : box_layout_for_buttons
+                    orientation : "horizontal"
+                    size_hint_y : None
+                    height : "45dp"
+                    spacing : "5dp"
+                    size_hint_x : None
+                    width : "400dp"
+                    BoxLayout:
+                        orientation : "vertical"
+                        spacing : "0dp"
+                        MDIconButton:
+                            id: add_button
+                            icon : "upload"
+                            theme_icon_color: "Custom"
+                            pos_hint : {"center_x": .5}
+                            icon_color:(0, 0, 1, 1)
+
+                            on_press:
+                                SQLiteDatabase(app.get_database_path()).create_table("product_table", root.columns)
+                                root.upload_button()
+                        MDLabel:
+                            text : "enregistrer"
+                            halign : "center"
+                            color: (0, 0, 1, 1)
+                            bold : True
+
+                    BoxLayout:
+                        orientation : "vertical"
+                        spacing : "0dp"
+
+                        MDIconButton:
+                            id: update_button
+                            icon : "update"
+                            theme_icon_color: "Custom"
+                            pos_hint : {"center_x": .5}
+                            icon_color : (0, 0, 1, 1)
+                            on_press:
+                                root.update_values()
+                        MDLabel:
+                            text: "mise à jour"
+                            halign : "center"
+                            color: (0, 0, 1, 1)
+                            bold : True
+
+                    BoxLayout:
+                        orientation : "vertical"
+                        spacing : "0dp"
+                        MDIconButton:
+                            icon : "delete"
+                            id: delete_button
+                            theme_icon_color: "Custom"
+                            icon_color : (1, 0, 0, 1)
+                            pos_hint : {"center_x": .5}
+
+                            on_press:
+                                result = SQLiteDatabase(app.get_database_path()).delete("product_table", f"{root.columns[0]} = '{text_input_for_product.text}'")
+                                root.ids.notification.text = result
+                                print(result)
+                                root.clear_inputs()
+                        MDLabel:
+                            text : "supprimer"
+                            halign : "center"
+                            color: (1, 0, 0, 1)
+                            bold : True
+                    #BoxLayout:
+                        #orientation : "vertical"
+                        #spacing : "0dp"
+                        #MDIconButton:
+                            #icon : "delete"
+                            #id: delete_non_barcode_items
+                            #theme_icon_color: "Custom"
+                            #icon_color : (0, 0, .5, 1)
+                            #pos_hint : {"center_x": .5}
+                            #on_press:
+                                #root.delete_non_barcode_items()
+
+                        #MDLabel:
+                            #text : "tous les produits"
+                            #halign : "center"
+                            #color: (0, 0, .5, 1)
+                            #bold : True
+
+
+
+        MDLabel:
+            id : notification
+            text: ""
+            halign: "center"
+        MDLabel:
+            id : notification1
+            text: ""
+            halign: "center"
+
+
+
+        #MDRoundFlatIconButton:
+            #text: "inserer les produits les plus courants"
+            #text_color: "blue"
+            #line_color : "blue"
+            #pos_hint: {"center_x": .5}
+            #on_press:
+                #root.insert_pdf_data_to_db()
+        #MDLabel:
+            #size_hint_y: None
+            #height : "15dp"
+            #text: ""
+            #halign: "center"
+
+        MDBottomNavigation:
+            panel_color: (0, 0, 1, 1)
+            selected_color_background: "blue"
+            text_color_active: "lightgrey"
+            id: toolbar_for_screen_three
+
+
+            MDBottomNavigationItem:
+                name: 'main_screen'
+                text: 'Home'
+                icon: 'home'
+                on_tab_press:
+                    app.root.current = "main_screen"
+                    app.root.transition.direction = 'right'
+
+
+            MDBottomNavigationItem:
+                name: 'second_screen'
+                text: 'Dossiers'
+                icon: 'file'
+                on_tab_press:
+                    app.root.current = "second_screen"
+                    #app.root.switch_to_screen("second_screen")
+                    app.root.transition.direction = 'right'
+
+            MDBottomNavigationItem:
+                name: 'third_screen'
+                text: 'Base de donnees'
+                icon: 'database'
+                on_tab_press: app.root.current = "third_screen"
+
+
+
+
+<SelectableLabel3>:
+    color : (0, 0, 0, 1)
+    font_size : "15dp"
+    canvas.before:
+        Color:
+            rgba: (0, 0, 1, .5) if self.selected else (0, 0, 0, 0)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<RVForScreenThree>:
+    id : rv_for_screen_three
+    viewclass:'SelectableLabel3'
+    SelectableRecycleBoxLayout3:
+        id : controller
+        default_size: None, dp(50) # this is for the label inside
+        default_size_hint: 1, None # this is for the label inside
+        size_hint_y: None # this is for the box itself
+        height: self.minimum_height  # this is for the box itself
+        orientation: 'vertical'
+        multiselect: False
+        touch_multiselect: True
+
+
+
+
+

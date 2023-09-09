@@ -1,0 +1,260 @@
+<ScreenTwo>:
+    BoxLayout:
+        orientation : "vertical"
+        spacing : "5dp"
+        #MDTopAppBar:
+            #id : toolbar_for_screen_two
+            #title: "STORE-I"
+            #icon: "printer"
+            #elevation: 0
+            #right_action_items: [["database", lambda x: root.go_to_screen_three()], ["file", lambda x: root.go_to_screen_two()],["home", lambda x: root.go_to_screen_one()]]
+
+
+        MDLabel:
+            id : counter
+            size_hint_y : None
+            height : "25dp"
+            color : (1, 0, 0, 1)
+            bold : True
+            halign: "center"
+        MDLabel:
+            id: selection
+            size_hint_y : None
+            height : "20dp"
+            text : ""
+            halign: "center"
+        MDLabel:
+            id: total_for_today
+            size_hint_y : None
+            height : "20dp"
+            color : (0, 0, 1, 1)
+            bold : True
+            halign: "center"
+        MDTextField:
+            id : time_variable
+            size_hint_y : None
+            height : "10dp"
+            text : "date"
+            halign: "center"
+        MDBoxLayout:
+            orientation : "horizontal"
+            MDBoxLayout:
+                orientation : "vertical"
+                MDTextField:
+                    size_hint_y : None
+                    id : match_items
+                    height : "15dp"
+                    hint_text : "   Search ..."
+                    multiline : False
+                    on_text:
+                        root.search_for_match()
+                ScrollView:
+                    do_scroll_y: True
+                    do_scroll_x: False
+                    bar_width : "20dp"
+
+                    CustomBoxLayoutScreen2:
+                        id : boxlayout_of_Screen2
+                        orientation : "vertical"
+                        RVForScreenTwo:
+                            id : rv_for_screen_two
+                            viewclass:'SelectableLabelScreen2'
+                            SelectableRecycleBoxLayout2:
+                                id : controller2
+                                default_size: None, dp(50) # this is for the label inside
+                                default_size_hint: 1, None # this is for the label inside
+                                size_hint_y: None # this is for the box itself
+                                height: self.minimum_height  # this is for the box itself
+                                orientation: 'vertical'
+                                multiselect: True
+                                touch_multiselect: False
+            MDBoxLayout:
+                orientation : "vertical"
+                MDTextField:
+                    id : categories
+                    hint_text : "créer une catégorie"
+
+                MDLabel:
+                    id : selected_items
+                    text : ""
+                    halign: "center"
+                    bold : True
+        MDSeparator:
+        MDBoxLayout:
+            size_hint_y : None
+            height : "95dp"
+            ScrollView:
+                do_scroll_x: True
+                do_scroll_y: True
+                bar_width : "7dp"
+                bar_width_color : (1, 1, 1, 1)
+                MDBoxLayout:
+                    orientation : "horizontal"
+                    spacing: "15dp"
+                    size_hint_x: None
+                    width: "350dp"
+                    size_hint_y : None
+                    height : "120dp"
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        spacing: "0dp"
+                        MDIconButton:
+                            icon: "selection-search"
+                            pos_hint : {"center_x": .5}
+                            theme_icon_color: "Custom"
+                            icon_color : (1, 0, 0, 1)
+                            on_press:
+                                root.display_products()
+                                #root.ids.info_products.text = "* Afficher les produits"
+                        MDLabel:
+                            id: info_products
+                            text : "Afficher les produits......."
+                            pos_hint : {"center_x": .5}
+                            color: (1, 0, 0, 1)
+                            bold : True
+                            halign: "center"
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        spacing: "0dp"
+
+                        MDIconButton:
+                            icon: "qrcode"
+                            theme_icon_color: "Custom"
+                            pos_hint : {"center_x": .5}
+                            icon_color : (0, 1, 0, 1)
+                            on_press:
+                                root.write_qrs_to_pdf()
+                        MDLabel:
+                            id: info_qrcode
+                            color: (0, 1, 0, 1)
+                            text : "creer QRCode.............."
+                            pos_hint : {"center_x": .5}
+                            bold : True
+                            halign: "center"
+
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        spacing: "0dp"
+                        MDIconButton:
+                            icon: "file-pdf-box"
+                            theme_icon_color: "Custom"
+                            pos_hint : {"center_x": .5}
+                            icon_color : (0, 0, 1, 1)
+                            on_press:
+                                root.write_table_to_pdf("ventes.pdf")
+
+                        MDLabel:
+                            id: info_sales
+                            color: (0, 0, 1, 1)
+                            pos_hint : {"center_x": .5}
+                            text : "la vente quotidienne en pdf"
+                            bold : True
+                            halign: "center"
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        spacing: "0dp"
+
+                        MDIconButton:
+                            icon: "file-pdf-box"
+                            pos_hint : {"center_x": .5}
+                            theme_icon_color: "Custom"
+                            icon_color : (0, 0, 0, 1)
+                            on_press:
+                                root.write_products_to_pdf("produits.pdf")
+                        MDLabel:
+                            id: info_all_products
+                            pos_hint : {"center_x": .5}
+                            color: (0, 0, 0, 1)
+                            text : "la base de données en pdf"
+                            bold : True
+                            halign: "center"
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        spacing: "0dp"
+
+                        MDIconButton:
+                            icon: "google-analytics"
+                            pos_hint : {"center_x": .5}
+                            theme_icon_color: "Custom"
+                            icon_color : (0, .5, .5, 1)
+                            on_press:
+                                root.get_total_sales()
+                        MDLabel:
+                            id: sales_in_money
+                            pos_hint : {"center_x": .5}
+                            color: (0, .5, .5, 1)
+                            text : "total de la vente quotidienne"
+                            bold : True
+                            halign: "center"
+
+
+
+
+
+
+
+
+
+
+
+        #MDSeparator:
+
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y : None
+            height : "70dp"
+            MDBottomNavigation:
+                id:toolbar_for_screen_two
+                panel_color: (0, 0, 1, 1)
+                selected_color_background: "blue"
+                text_color_active: "lightgrey"
+
+
+
+                MDBottomNavigationItem:
+                    name: 'main_screen'
+                    text: 'Home'
+                    icon: 'home'
+                    on_tab_press:
+                        app.root.current = "main_screen"
+                        app.root.transition.direction = 'right'
+
+
+
+                MDBottomNavigationItem:
+                    name: 'second_screen'
+                    text: 'Dossiers'
+                    icon: 'file'
+                    on_tab_press: app.root.current = "second_screen"
+
+                MDBottomNavigationItem:
+                    name: 'third_screen'
+                    text: 'Base de donnees'
+                    icon: 'database'
+                    on_tab_press:
+                        app.root.current = "third_screen"
+                        #app.root.switch_to_screen("third_screen")
+                        app.root.transition.direction = 'left'
+
+
+
+
+
+
+
+<SelectableLabelScreen2>:
+    color : (0, 0, 0, 1)
+    font_size : "15dp"
+    canvas.before:
+        Color:
+            rgba: (0, 0, 1, .5) if self.selected else (0, 0, 0, 0)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+

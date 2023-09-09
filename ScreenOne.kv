@@ -1,0 +1,186 @@
+#:import CustomBoxLayout LogicForScreenOne.CustomBoxLayout
+#:import CustomTextFieldScreenOne LogicForScreenOne.CustomTextFieldScreenOne
+#:import CartClass LogicForScreenOne.CartClass
+#: import SQLiteDatabase DataBaseClasses.SQLiteDatabase
+
+
+<ScreenOne>:
+    order_input : order_input
+    BoxLayout:
+        id : main_boxlayout
+        orientation : "vertical"
+
+        MDLabel:
+            size_hint_y : None
+            height : "20dp"
+        MDLabel:
+            id : total
+            text : "Total : 0.0"
+            halign: "center"
+            size_hint_y: None
+            height : "30dp"
+            theme_text_color: "Hint"
+            background_normal : ""
+            font_size : "20dp"
+            color : (0, 0, 0, 1)
+
+        MDBoxLayout:
+            orientation : "horizontal"
+            size_hint_y: None
+            height : "70dp"
+            CustomTextFieldScreenOne:
+                id : select_item
+                hint_text : "   nom du produit..."
+                font_size : "15dp"
+                multiline : False
+                on_focus:
+                    root.window.open()
+                on_text :
+                    root.window.content.update_data(SQLiteDatabase(app.get_database_path()), "product_table", "product_name", self.text)
+            MDBoxLayout:
+                orientation : "vertical"
+                size_hint_x : None
+                width : "150dp"
+                spacing : "0"
+                MDIconButton:
+                    icon : "cart-check"
+                    theme_icon_color: "Custom"
+                    pos_hint : {"center_x": .5}
+                    icon_color : (0, 0, 1, 1)
+                    on_press:
+                        order_input.get_product_amounts()
+                        order_input.calculate_total_price(order_input.get_product_amounts())
+                        order_input.register_sold_items()
+                        root.ids.select_item.order_input_name.clear()
+                        order_input.clear_widgets()
+                        order_input.product_amounts.clear()
+                        root.ids.total.text = "0"
+                MDLabel:
+                    text : "confirmer la vente"
+                    bold : True
+                    halign: "center"
+                    color: (0, 0, 1, 1)
+
+
+
+
+
+        ScrollView:
+            do_scroll_y: True
+            do_scroll_x: False
+            bar_width : "5dp"
+            size_hint_y : None
+            height : "350dp"
+
+            CartClass:
+                id : order_input
+                spacing : "5dp"
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+
+
+
+
+
+        MDBoxLayout:
+            orientation : "horizontal"
+            padding : "2dp"
+            size_hint_y : None
+            height : "65dp"
+            spacing : "0"
+            MDBoxLayout:
+                orientation : "vertical"
+                MDIconButton:
+                    icon : "printer"
+                    theme_icon_color: "Custom"
+                    pos_hint : {"center_x": .5}
+                    icon_color : (0, 0, 1, 1)
+                    on_press:
+                        root.add_arv()
+                        #root.ids.order_input.create_invoice()
+
+
+                MDLabel:
+                    text : "Creer Une Facture"
+                    bold : True
+                    halign: "center"
+                    color: (0, 0, 1, 1)
+
+            MDBoxLayout:
+                orientation : "vertical"
+                MDIconButton:
+                    icon: "file"
+                    pos_hint : {"center_x": .5}
+                    on_press:
+                        #root.ids.order_input.open_pdf_with_default_pdf()
+                        root.open_file_chooser()
+                        #root.add_arv()
+                        #root.window.content.update_data(SQLiteDatabase(app.get_database_path()), "invoice_table", "person_name", self.text)
+                MDLabel:
+                    id : facture_notif
+                    text : "Lire Une Facture"
+                    halign: "center"
+                    bold : True
+
+
+        MDBottomNavigation:
+            panel_color: (0, 0, 1, 1)
+            selected_color_background: "blue"
+            text_color_active: "lightgrey"
+            id : toolbar
+
+
+
+            MDBottomNavigationItem:
+                name: 'main_screen'
+                text: 'Home'
+                icon: 'home'
+                on_tab_press: app.root.current = "main_screen"
+
+
+            MDBottomNavigationItem:
+                name: 'second_screen'
+                text: 'Dossiers'
+                icon: 'file'
+                on_tab_press:
+                    #app.root.switch_to_screen("second_screen")
+                    #app.root.current = "second_screen"
+                    #app.root.transition.direction = 'left'
+                    root.change_screens_two()
+
+
+            MDBottomNavigationItem:
+                name: 'third_screen'
+                text: 'Base de donnees'
+                icon: 'database'
+                on_tab_press:
+                    root.change_screens_three()
+                    #app.root.current = "third_screen"
+                    #app.root.transition.direction = 'left'
+
+
+
+
+<SelectableLabelScreen2>:
+    color : (0, 0, 0, 1)
+    font_size : "15dp"
+    canvas.before:
+        Color:
+            rgba: (0, 0, 1, .5) if self.selected else (0, 0, 0, 0)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<RVForScreenOne>:
+    id : rv_for_screen_one
+    viewclass:'SelectableLabel'
+    SelectableRecycleBoxLayout:
+        id : controller
+        default_size: None, dp(50) # this is for the label inside
+        default_size_hint: 1, None # this is for the label inside
+        size_hint_y: None # this is for the box itself
+        height: self.minimum_height  # this is for the box itself
+        orientation: 'vertical'
+        multiselect: False
+        touch_multiselect: False
